@@ -6,20 +6,20 @@
 /* eslint-disable no-unused-vars */
 const db = require('../models');
 
-const User = db.users;
+const Comment = db.comments;
 
 exports.findAll = async (req, res) => {
   try {
-    const users = await User.findAll();
+    const comments = await Comment.findAll();
     res.json({
       code: 200,
-      message: 'Users retrieved successfully.',
-      data: users,
+      message: 'Comments retrieved successfully.',
+      data: comments,
     });
   } catch (error) {
     res.status(500).json({
       code: 500,
-      message: error.message || 'Some error occurred while retrieving users.',
+      message: error.message || 'Some error occurred while retrieving comments.',
       data: null,
     });
   }
@@ -28,23 +28,22 @@ exports.findAll = async (req, res) => {
 exports.create = async (req, res) => {
   try {
     const user = {
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-      password: req.body.password,
+      text: req.body.text,
+      user_id: req.body.user_id,
+      recipe_id: req.body.recipe_id,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    const data = await User.create(user);
+    const data = await Comment.create(user);
     res.json({
       code: 200,
-      message: 'User created successfully',
+      message: 'Comment created successfully',
       data,
     });
   } catch (error) {
     res.status(500).json({
       code: 500,
-      message: error.message || 'Some error occurred while creating the User.',
+      message: error.message || 'Some error occurred while creating the Comment.',
       data: null,
     });
   }
@@ -53,30 +52,30 @@ exports.create = async (req, res) => {
 // eslint-disable-next-line consistent-return
 exports.delete = async (req, res)=> {
   try {
-    const userId = req.params.id;
+    const commentId = req.params.id;
     // Menggunakan "where" untuk mengidentifikasi data yang akan dihapus berdasarkan ID
-    const result = await User.destroy({
+    const result = await Comment.destroy({
       where: {
-        id: userId,
+        id: commentId,
       },
     });
 
     if (result === 0) {
       return res.status(404).json({
-        message: 'User not found',
+        message: 'Comment not found',
         data: null,
       });
     }
 
     res.json({
       code: 200,
-      message: 'User deleted successfully',
+      message: 'Comment deleted successfully',
       data: result,
     });
   } catch (error) {
     res.status(500).json({
       code: 500,
-      message: error.message || 'Some error occurred while deleting the User.',
+      message: error.message || 'Some error occurred while deleting the Comment.',
       data: null,
     });
   }
@@ -84,36 +83,36 @@ exports.delete = async (req, res)=> {
 
 exports.update = async (req, res) => {
   try {
-    const userId = req.params.id;
-    const updatedUserData = {
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-      password: req.body.password,
+    const commentId = req.params.id;
+    const updatedCommentData = {
+      text: req.body.text,
+      user_id: req.body.user_id,
+      recipe_id: req.body.recipe_id,
+      createdAt: new Date(),
       updatedAt: new Date(),
     };
 
-    const [rowsUpdated, [updatedUser]] = await User.update(updatedUserData, {
-      where: { id: userId },
+    const [rowsUpdated, [updatedComment]] = await Comment.update(updatedCommentData, {
+      where: { id: commentId },
       returning: true,
     });
 
     if (rowsUpdated === 0) {
       return res.status(404).json({
-        message: 'User not found',
+        message: 'Comment not found',
         data: null,
       });
     }
 
     res.json({
       code: 200,
-      message: 'User updated successfully',
-      data: updatedUser,
+      message: 'Comment updated successfully',
+      data: updatedComment,
     });
   } catch (error) {
     res.status(500).json({
       code: 500,
-      message: error.message || 'Some error occurred while updating the User.',
+      message: error.message || 'Some error occurred while updating the Comment.',
       data: null,
     });
   }

@@ -41,5 +41,7 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 db.users = require('./user')(sequelize, Sequelize);
+db.recipes = require('./recipe')(sequelize, Sequelize);
+db.comments = require('./comment')(sequelize, Sequelize);
 
 module.exports = db;

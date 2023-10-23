@@ -6,20 +6,20 @@
 /* eslint-disable no-unused-vars */
 const db = require('../models');
 
-const User = db.users;
+const Recipe = db.recipes;
 
 exports.findAll = async (req, res) => {
   try {
-    const users = await User.findAll();
+    const recipes = await Recipe.findAll();
     res.json({
       code: 200,
-      message: 'Users retrieved successfully.',
-      data: users,
+      message: 'Recipes retrieved successfully.',
+      data: recipes,
     });
   } catch (error) {
     res.status(500).json({
       code: 500,
-      message: error.message || 'Some error occurred while retrieving users.',
+      message: error.message || 'Some error occurred while retrieving recipes.',
       data: null,
     });
   }
@@ -28,23 +28,24 @@ exports.findAll = async (req, res) => {
 exports.create = async (req, res) => {
   try {
     const user = {
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-      password: req.body.password,
+      title: req.body.title,
+      thumbnail: req.body.thumbnail,
+      banner: req.body.banner,
+      description: req.body.description,
+      video: req.body.video,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
-    const data = await User.create(user);
+    const data = await Recipe.create(user);
     res.json({
       code: 200,
-      message: 'User created successfully',
+      message: 'Recipe created successfully',
       data,
     });
   } catch (error) {
     res.status(500).json({
       code: 500,
-      message: error.message || 'Some error occurred while creating the User.',
+      message: error.message || 'Some error occurred while creating the Recipe.',
       data: null,
     });
   }
@@ -53,30 +54,30 @@ exports.create = async (req, res) => {
 // eslint-disable-next-line consistent-return
 exports.delete = async (req, res)=> {
   try {
-    const userId = req.params.id;
+    const recipeId = req.params.id;
     // Menggunakan "where" untuk mengidentifikasi data yang akan dihapus berdasarkan ID
-    const result = await User.destroy({
+    const result = await Recipe.destroy({
       where: {
-        id: userId,
+        id: recipeId,
       },
     });
 
     if (result === 0) {
       return res.status(404).json({
-        message: 'User not found',
+        message: 'Recipe not found',
         data: null,
       });
     }
 
     res.json({
       code: 200,
-      message: 'User deleted successfully',
+      message: 'Recipe deleted successfully',
       data: result,
     });
   } catch (error) {
     res.status(500).json({
       code: 500,
-      message: error.message || 'Some error occurred while deleting the User.',
+      message: error.message || 'Some error occurred while deleting the Recipe.',
       data: null,
     });
   }
@@ -84,36 +85,37 @@ exports.delete = async (req, res)=> {
 
 exports.update = async (req, res) => {
   try {
-    const userId = req.params.id;
-    const updatedUserData = {
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-      password: req.body.password,
+    const recipeId = req.params.id;
+    const updatedRecipeData = {
+      title: req.body.title,
+      thumbnail: req.body.thumbnail,
+      banner: req.body.banner,
+      description: req.body.description,
+      video: req.body.video,
       updatedAt: new Date(),
     };
 
-    const [rowsUpdated, [updatedUser]] = await User.update(updatedUserData, {
-      where: { id: userId },
+    const [rowsUpdated, [updatedRecipe]] = await Recipe.update(updatedRecipeData, {
+      where: { id: recipeId },
       returning: true,
     });
 
     if (rowsUpdated === 0) {
       return res.status(404).json({
-        message: 'User not found',
+        message: 'Recipe not found',
         data: null,
       });
     }
 
     res.json({
       code: 200,
-      message: 'User updated successfully',
-      data: updatedUser,
+      message: 'Recipe updated successfully',
+      data: updatedRecipe,
     });
   } catch (error) {
     res.status(500).json({
       code: 500,
-      message: error.message || 'Some error occurred while updating the User.',
+      message: error.message || 'Some error occurred while updating the Recipe.',
       data: null,
     });
   }
